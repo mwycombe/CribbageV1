@@ -45,11 +45,9 @@ class MasterScreen (tk.LabelFrame):
         super().__init__( parent)
         self['text'] = 'Master'
         self['relief'] = tk.RAISED
+        self.columnconfigure(0, weight=1, uniform='a')
+        self.rowconfigure(0, weight=1, uniform='a')
         self.grid(row = 0, column = 0, sticky = 'nsew')
-        # self.text = 'Master'
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-
 
         print('MasterScreen started . . .')
         
@@ -82,8 +80,8 @@ class MasterScreen (tk.LabelFrame):
                                             borderwidth = 5,
                                             text = 'Session'
                                             )
-        # self.sessionHeader.columnconfigure(0, weight=1)
-        # self.sessionHeader.columnconfigure(1, weight=1)
+        self.sessionHeader.columnconfigure(0, weight=1)
+        self.sessionHeader.columnconfigure(1, weight=1)
         self.sessionHeader.grid(row = 0, column = 0, sticky='ew')
 
         # register both header subpanels
@@ -95,8 +93,6 @@ class MasterScreen (tk.LabelFrame):
                                          borderwidth = 2,
                                          relief = tk.GROOVE,
                                          text = 'Club')
-        # self.clubPanel.columnconfigure(0, weight=1)
-        # self.clubPanel.rowconfigure(0,weight=1)
         self.clubPanel.grid(row=0, column=0,
                             sticky = 'nsew')
         # register club panel
@@ -109,8 +105,6 @@ class MasterScreen (tk.LabelFrame):
                                             relief = tk.GROOVE,
                                             text = 'Activity'
                                             )
-        # self.activityPanel.columnconfigure(0, weight=1)
-        # self.activityPanel.rowconfigure(0, weight=1)
         self.activityPanel.grid(row = 0, column = 1,
                               stick = 'nsew')
 
