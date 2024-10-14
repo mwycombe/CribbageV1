@@ -9,7 +9,6 @@
 #####################################################################
 # TODO: From myPyfiles, move averagereport, battingavgreport, cashreport, nationalratingreport
 # TODO: From myPyfiles, move qtrdropreport, qtrfullreport, skunkreport, tourneyreport
-# TODO: Add selection for alpha tourney reporting for website updating
 # TODO: Don't report players that are inactive - soft deleted.
 # TODO: Indicate Done, ask for continue, and reset selections
 # TODO: Must check for a valid tourney being selected - otherwise fails silently with tuple index out of range
@@ -17,7 +16,9 @@
 # TODO: Need to be able to edit bad tourney week/date
 # TODO: Make sure report is selected before running reports
 # TODO: Add column totals to tourney reports
+# TODO: Add bracket construction and MRP assignements
 # TODO: improve input screen for results
+# TODO: Improve alphs search for names
 # TODO: Allow for active/inactive players in results & reports
 # TODO: UPGRADE TO 2024 AFTER THE SEASON ENDS
 
@@ -47,7 +48,6 @@ import qtrdropreport
 import qtrfullreport
 import skunkreport
 import tourneyreport
-import alphareport
 from masterscreen import MasterScreen
 
 class ReportsTab (tk.Frame):
@@ -71,7 +71,6 @@ class ReportsTab (tk.Frame):
         self.qtrFullVar = tk.IntVar()
         self.skunksVar = tk.IntVar()
         self.tourneyVar = tk.IntVar()
-        self.alphaVar = tk.IntVar()
 
         # build stack of selections
         rpt.reportStack = {}
@@ -83,7 +82,6 @@ class ReportsTab (tk.Frame):
         rpt.reportStack['qtrfullreport'] = (self.qtrFullVar, qtrfullreport.QtrFullReport)
         rpt.reportStack['skunkreport'] = (self.skunksVar, skunkreport.SkunkReport)
         rpt.reportStack['tourneyreport'] = (self.tourneyVar, tourneyreport.TourneyReport)
-        rpt.reportStack['alphareport'] = (self.alphaVar, alphareport.AlphaReport)
 
         # build out tab and register with notebook
         self.config(padx = '5', pady = '5')
@@ -227,14 +225,6 @@ class ReportsTab (tk.Frame):
                                               width = 20,
                                               variable = self.tourneyVar
                                               )
-        self.alphaChoice = tk.Checkbutton(self.selectPanel,
-                                          text = 'Alpha Report',
-                                          onvalue = 1, offvalue = 0,
-                                          anchor = 'w',
-                                          height = 1,
-                                          width = 20,
-                                          variable = self.alphaVar
-                                          )
 
         self.rptsPanel.columnconfigure(0, weight=1)
         self.allChoice.grid(row = 0, column = 0, sticky = 'w')
@@ -246,7 +236,6 @@ class ReportsTab (tk.Frame):
         self.qtrFullChoice.grid(column = 0, sticky='w')
         self.skunkChoice.grid(column = 0, sticky='w')
         self.tourneyChoice.grid(column = 0, sticky='w')
-        self.alphaChoice.grid(column = 0, sticky='w')
         self.buildActivityPanel()
     def buildActivityPanel(self):
         MasterScreen.wipeActivityPanel()
@@ -286,7 +275,6 @@ class ReportsTab (tk.Frame):
         # self.qtrFullVar.set(self.allReportsVar.get())
         self.skunksVar.set(self.allReportsVar.get())
         self.tourneyVar.set(self.allReportsVar.get())
-        self.alphaVar.set(self.allReportsVar.get())
 
     def runReports(self, tnumber, tdate):
         # Was unable to resolve rpt. variables in this method called from the tkinter event handler

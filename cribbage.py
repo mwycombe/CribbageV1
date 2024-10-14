@@ -124,12 +124,12 @@ class Cribbage (ttk.Frame):
 	#
 	def __init__ (self, parent, title):
 		super().__init__(parent)
-		self.grid()
+		self.grid(sticky='nsew')
 		self.parent = parent
 		self.parent.grid()
 		self.parent.title(title)
-		##        self.rowconfigure(0,weight=1)
-		##        self.columnconfigure(0,weight=1)
+		self.rowconfigure(0,weight=1, uniform='a')
+		self.columnconfigure(0,weight=1, uniform='a')
 		cfg.screenDict['cribbage'] = self  # register this frame
 		print ('Start Cribbage')
 		# build global xref files
@@ -148,7 +148,7 @@ class Cribbage (ttk.Frame):
 	def buildPanels (self, parent=None):
 		# build master inside senior panel
 		# master sets up the notebook panel to be used by all tabs
-		MasterScreen(parent)
+		MasterScreen(self)
 		# build out the tabs into notebook and self register themselves
 		# when done, postion in first tab
 
@@ -160,7 +160,7 @@ class Cribbage (ttk.Frame):
 		HelpTab(cfg.screenDict['notebook'])
 		cfg.screenDict['notebook'].select(1)    # reposition back at TourneysAtb
 
-		self.setNotebookEventCapture()
+		self.setEventCapture()
 
 	# def openAccessModules(self):
 	# 	# create an instance of each access module in cfg
@@ -171,7 +171,7 @@ class Cribbage (ttk.Frame):
 	#************************************************************
 	#   capture notebook tab events one place
 	#
-	def setNotebookEventCapture(self):
+	def setEventCapture(self):
 		print ('generic notebook tab event capture')
 		cfg.screenDict['notebook'].bind('<<NotebookTabChanged>>',self.tabChange)
 
@@ -200,7 +200,7 @@ class Cribbage (ttk.Frame):
 
 if __name__ == '__main__':
 
-	# call clase level init method
+	# call class level init method
 	print ('Starting cribbage...')
 	CribbageStartup.initDbms()
 	CribbageStartup.createPlayersXref()
@@ -211,12 +211,11 @@ if __name__ == '__main__':
 
 	if 'root' not in cfg.screenDict:
 		root = tk.Tk()
-		root.resizable(True, True)
 		cfg.screenDict['root'] = root
 	print ('In peggers ... screenDict:= ', cfg.screenDict)
 	# make resizeable
-	cfg.screenDict['root'].rowconfigure(0, weight=1)
-	cfg.screenDict['root'].columnconfigure(0, weight=1)
+	cfg.screenDict['root'].rowconfigure(0, weight=1, uniform='a')
+	cfg.screenDict['root'].columnconfigure(0, weight=1, uniform='a')
 	cfg.screenDict['root'].resizable(True, True)
 
 
