@@ -1,0 +1,70 @@
+
+Fields  used by validationtab
+
+        # control variables for correction panel mgmt
+        self.topPName      = tk.StringVar()
+        self.topPSeat      = tk.IntVar()
+        self.topPCutCard   = tk.StringVar()
+        self.topPGame      = tk.IntVar()
+        self.topPPoints    = tk.IntVar()
+        self.topPPlus      = tk.IntVar()
+        self.topPMinus     = tk.IntVar()
+        self.topPOppSeat   = tk.IntVar()
+
+        self.topOName      = tk.StringVar()
+        self.topOSeat      = tk.IntVar()
+        self.topOCutCard   = tk.StringVar()
+        self.topOGame      = tk.IntVar()
+        self.topOPoints    = tk.IntVar()
+        self.topOPlus      = tk.IntVar()
+        self.topOMinus     = tk.IntVar()
+        self.topOOppSeat   = tk.IntVar()
+
+        self.midOName      = tk.StringVar()
+        self.midOSeat      = tk.IntVar()
+        self.midOCutCard   = tk.StringVar()
+        self.midOGame      = tk.IntVar()
+        self.midOPoints    = tk.IntVar()
+        self.midOPlus      = tk.IntVar()
+        self.midOMinus     = tk.IntVar()
+        self.midOOppSeat   = tk.IntVar()
+
+        self.botOName      = tk.StringVar()
+        self.botOSeat      = tk.IntVar()
+        self.botOCutCard   = tk.StringVar()
+        self.botOGame      = tk.IntVar()
+        self.botOPoints    = tk.IntVar()
+        self.botOPlus      = tk.IntVar()
+        self.botOMinus     = tk.IntVar()
+        self.botOOppSeat   = tk.IntVar()
+
+        # other control variables
+
+        self.errorDetailLevel   = tk.IntVar()
+        self.showDetails = False
+
+        # other instance variables
+
+        self.pMemScoreCard  = ''    # player scorecard being validated
+        self.oMemScoreCard  = ''    # opponent scorecard validating against
+        self.pMemGame       = ''    # player game being validated
+        sefl.oMemGame       = ''    # opponent game stepping variable
+        self.oMemGame1      = ''    # first opponent game being validated against
+        self.oMemGame2      = ''    # second opponent game being validated against
+        self.oMemGame3      = ''    # third opponent game being validated againse
+
+
+        # Validation Logic:
+        #   Determine if there are any more score cards to be checked
+        #   Determine if there are any more games to check for the current player's score card
+        #   For each game, determine if it has been validated already
+        #   For each unvalidated player game, determine how many candidate games there are
+        #   If there is just one candidate game AND it checks out AND NOT show details
+        #       Mark player game as validated and step
+        #   Else
+        #       Show Player game and Opponent game and correcton messages
+        #       On Correction button event, re-run the validation for the same player game
+        #   For each candidate opponent game, show opponent game panels
+        #   If any candidate game is an exact match, show accept message and no error messages
+        #   Else, show correct messages against all opponent games
+        

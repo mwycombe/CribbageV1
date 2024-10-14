@@ -1,0 +1,86 @@
+        if self.validScoreCards[0]: # Means all scorecard are checked out
+            validationComplete()
+            return
+        
+        for pid in cfg.tourneyScoreCards:   # k:v pid:mscard
+            print('Score card ', cfg.tourneyScoreCards[pid])
+            self.pMemScoreCard = cfg.tourneyScoreCards[pid]
+            self.pSeatNumber = self.pMemScoreCard.seatNumber
+            
+            if not self.validScoreCards[pid][0]:    # not all games have been checked
+                
+                for gid in cfg.tourneyScoreCards[pid].games: # k:v gameNo:mgame
+                    if not self.validScoreCards[pid][gid]:  # this game not checked
+                        self.pMemGame = cfg.tourneyScoreCards[pid].games[gid] # memgame
+                        # always clear the validation screen area for each new game being checked
+                        self.hideAllPanels()
+##                print ('Game ', cfg.tourneyScoreCards[pid].games[gid])
+##                print('Game ',cfg.tourneyScoreCards[pid].games[gid].gameNumber,
+##                      ' Pts ',cfg.tourneyScoreCards[pid].games[gid].gamePoints,
+##                      ' Spread ',cfg.tourneyScoreCards[pid].games[gid].spreadPoints,
+##                      ' Opp ',cfg.tourneyScoreCards[pid].games[gid].opponentSeat,
+##                      ' Cut ',cfg.tourneyScoreCards[pid].games[gid].cutCard
+##                      )
+                        # now show the top left panel for player game
+                        populatePlayerPanel(self.pMemScoreCard, self.pMemGame)
+                        # for each game, look up playerId from seat number
+                        self.oPlayerId = cfg.seatsBySeat[self.pMemGame.opponentSeat]
+                        self.oMemScoreCard = cfg.tourneyScoreCards[self.oPlayerId]
+                        self.playCount = 1
+                        self.oMemGame1 = ''
+                        self.oMemGame2 = ''
+                        self.oMemGame3 = ''
+                        for oid in self.oMemScoreCard.games:
+                            if self.oMemScoreCard.games[oid].opponentSeat == self.pSeatNumber:
+                                # this allows for up to three games against the same player
+                                if self.playCount == 1:
+                                    self.oMemGame1 = self.oMemScoreCard.games[oid]
+                                    self.playCount += 1
+                                    break
+                                if self.playCount == 2:
+                                    self.oMemGame2 = self.oMemScoreCard.games[oid]
+                                    self.playCount += 1
+                                    break
+                                if self.playeCount == 3:
+                                    self.oMemGame3 = self.oMemScoreCard.games[oid]
+                            # do the actual check of the cards
+                            # look at the value returned for where the match is
+                            # matchGame is either 0,1,2 for the game that matched or
+                            # -1 if there is no games that match
+                            # show opponent matching cards by seat - up to 3
+                            populateOpponentPanels(self.playCount, self.oMemScoreCard,
+                                                   self.oMemGame1, oMemGame2, oMemGame3)
+                            matchGame = checkGames(self.playCount,
+                                                   self.pMemScoreCard, self.pMemGame,
+                                                   self.oMemScoreCard,
+                                                   self.oMemGame1,
+                                                   self.oMemGame2,
+                                                   self.oMemGame3
+                                        )
+                            if self.playCount == 1 and matchGame == 0:
+                                # single game that matches
+                                if self.showDetails:
+                                    showSingleGameDetails(self.pMemScoreCard, self.MemGame,
+                                                          self.oMemScoreCard, self.oMemGame1)
+                            elif self.playcount == 1 and matchGame < 0:
+                                # single game that doesn't match
+                                showSingleGameErrors(self.pMemscoreCard, self.MemGame,
+                                                     self.oMemScoreCard, self.oMemGame)
+                            elif self.playCount > 1 and matchGame < 0:
+                                showMultiGameErrors(self.playCount, matchGame,
+                                                    self.pMemScoreCard, self.pMemGame,
+                                                    self.oMemScoreCard,
+                                                    self.oMemGame1,
+                                                    self.oMemGame2,
+                                                    self.oMemGame3
+                                                    )
+                            else:
+                                showMultiGameAccept(self.playCount, matchGame,
+                                                    self.pMemScoreCard, self.pMemGame,
+                                                    self.oMemScoreCard,
+                                                    self.oMemGame1,
+                                                    self.oMemGame2,
+                                                    self.oMemGame3
+                                                    )
+                        
+ 
