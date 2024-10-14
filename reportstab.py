@@ -37,9 +37,11 @@ import sys as sys
 import os as os
 from datetime import date
 
+import alphareport
 # Personal imports
 import cribbageconfig as cfg
 import cribbagereport as rpt
+import alphareport
 import battingavgreport
 import cashreport
 import individualstatsReport
@@ -63,6 +65,7 @@ class ReportsTab (tk.Frame):
 
         # control variables for report selection
         self.allReportsVar = tk.IntVar()
+        self.alphaVar = tk.IntVar()
         self.battingAvgVar = tk.IntVar()
         self.cashVar = tk.IntVar()
         self.individStatsVar = tk.IntVar()
@@ -74,6 +77,7 @@ class ReportsTab (tk.Frame):
 
         # build stack of selections
         rpt.reportStack = {}
+        rpt.reportStack['alphareport'] = (self.alphaVar, alphareport.AlphaReport)
         rpt.reportStack['battingavgreport'] = (self.battingAvgVar, battingavgreport.BattingAvgReport)
         rpt.reportStack['cashreport'] = (self.cashVar, cashreport.CashReport)
         rpt.reportStack['individstatsreport'] = (self.individStatsVar, individualstatsReport.IndividualStatsReport)
@@ -161,6 +165,14 @@ class ReportsTab (tk.Frame):
                                           command = self.selectAllReports,
                                           variable = self.allReportsVar
                                           )
+        self.alphaChoice = tk.Checkbutton(self.selectPanel,
+                                            text = 'Alpha Report',
+                                            onvalue = 1, offvalue = 0,
+                                            anchor = 'w',
+                                            height = 1,
+                                            width = 20,
+                                            variable = self.alphaVar
+                                            )
         self.battingAvgChoice = tk.Checkbutton(self.selectPanel,
                                               text = 'Batting Average Report',
                                               onvalue = 1, offvalue = 0,
@@ -228,6 +240,7 @@ class ReportsTab (tk.Frame):
 
         self.rptsPanel.columnconfigure(0, weight=1)
         self.allChoice.grid(row = 0, column = 0, sticky = 'w')
+        self.alphaChoice.grid(column = 0, sticky='w')
         self.battingAvgChoice.grid(column = 0, sticky='w')
         self.cashChoice.grid(column = 0, sticky='w')
         self.individStatsChoice.grid(column = 0, sticky='w')
@@ -265,6 +278,7 @@ class ReportsTab (tk.Frame):
             tDate = date.fromisoformat(trny[2]).strftime('%m/%d/%Y')
             self.tourneysWithResults.insert(tk.END,'  ' + str(trny[1]) + '.  ' + tDate)
     def selectAllReports(self):
+        self.alphaVar.set(self.allReportsVar.get())
         self.battingAvgVar.set(self.allReportsVar.get())
         self.cashVar.set(self.allReportsVar.get())
         # skip individual stats
