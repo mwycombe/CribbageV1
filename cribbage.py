@@ -200,7 +200,12 @@ class Cribbage (ttk.Frame):
 
 if __name__ == '__main__':
 
-	# call clase level init method
+	if 'root' not in cfg.screenDict:
+		root = tk.Tk()
+		root.resizable(True, True)
+		cfg.screenDict['root'] = root
+
+	# call class level init methods
 	print ('Starting cribbage...')
 	CribbageStartup.initDbms()
 	CribbageStartup.createPlayersXref()
@@ -209,10 +214,7 @@ if __name__ == '__main__':
 
 	# put root frame object into config module dictionary
 
-	if 'root' not in cfg.screenDict:
-		root = tk.Tk()
-		root.resizable(True, True)
-		cfg.screenDict['root'] = root
+
 	print ('In peggers ... screenDict:= ', cfg.screenDict)
 	# make resizeable
 	cfg.screenDict['root'].rowconfigure(0, weight=1)
