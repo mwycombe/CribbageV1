@@ -13,9 +13,14 @@ import sys
 class AccessPlayers (object):
 	def allPlayers(self, club):
 		# club is Club sqlobject
-		# returns a list
+		# returns an unsorted list
 		players = list(Player.select())
 		return players
+	def allActivePlayers(self, club):
+		# club as Club sqlobject
+		# active == 0 indicates inactive player
+		# returns an unsorted list
+		players = list(Player.select(Player.q.active > 0))
 	def singlePlayerByLastName(self, club, lname):
 		return list(Player.select(Player.q.LastName == lname))[0]
 	def singlePlayerByFirstandLastNames(self,fname,lname):
