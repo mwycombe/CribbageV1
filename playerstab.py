@@ -64,9 +64,12 @@ class PlayersTab (tk.Frame):
         self.expiration = tk.StringVar()
         self.joined = tk.StringVar()
         self.active =tk.IntVar()
+        self.showAllPlayers = tk.IntVar()
+        self.showAllPlayers.set(1)
 
         # control variable for existing players
         self.players=tk.StringVar()
+
 
 
         # build out tab and register with notebook
@@ -87,7 +90,24 @@ class PlayersTab (tk.Frame):
                                              relief='flat',
                                              text='Existing Players'
                                              )
+        self.oldPlayerPanel.columnconfigure(3, weight = 1, uniform='a')
+        self.oldPlayerPanel.rowconfigure(2,weight=1, uniform='a')
         self.oldPlayerPanel.grid(row=0, column=0)
+
+        self.asteriskLabel = ttk.Label(self.oldPlayerPanel,
+                                       text = "* = Active")
+        self.asteriskLabel.grid(row=0, column=0, sticky='w')
+
+        # choose what to show
+        self.showAll = ttk.Checkbutton(self.oldPlayerPanel,
+                                       text = 'Show All',
+                                       on = 1,
+                                       off = 0,
+                                       command = self.displayExistingPlayers,
+                                       variable=self.showAllPlayers)
+        self.showAll.grid(row=0, column=1)
+        # for testing
+        self.showAllPlayers.set(1)
 
         self.noPlayers = tk.Label(self.oldPlayerPanel,
                                    text='There are no existing players',
@@ -155,15 +175,17 @@ class PlayersTab (tk.Frame):
         self.keyF9 = tk.Label(self.ap, text = 'F9    Toggle active status for player selected in listbox')
         self.keyF10 = tk.Label(self.ap, text = 'F10   Save all current changes')
         self.keyEsc = tk.Label(self.ap, text = 'Esc   Quit current activity')
+        self.dClick = tk.Label(self.ap, text = 'Double Click to toggle active')
         self.keyF1.grid(row=1, column=0, sticky='w')
-        self.keyF2.grid(row=2, column=0, sticky='w')
-        self.keyF3.grid(row=3, column=0, sticky='w')
-        self.keyF9.grid(row=4, column=0, sticky='w')
-        self.keyF10.grid(row=5, column=0, sticky='w')
-        self.keyEsc.grid(row=6, column=0, sticky='w')
+        self.keyF2.grid( column=0, sticky='w')
+        self.keyF3.grid( column=0, sticky='w')
+        self.keyF9.grid( column=0, sticky='w')
+        self.keyF10.grid( column=0, sticky='w')
+        self.keyEsc.grid( column=0, sticky='w')
+        self.dClick.grid( column=0, sticky='w')
 
     # ************************************************************
-    #   handle tab change by refressing players
+    #   handle tab change by refreshing players
     def tabChange(self,event):
         #
         # always refreshes the list of existing players
@@ -185,25 +207,33 @@ class PlayersTab (tk.Frame):
             self.hideWidget(self.noPlayers)
             self.showWidget(self.oldPlayerPanel)
 
-            self.existingPlayers = cfg.ap.playersByLastName(cfg.clubRecord)
+            if self.showAllPlayers.get() > 0 :
+                self.existingPlayers = cfg.ap.playersByLastName(cfg.clubRecord)
+            else:
+                self.existingPlayers = cfg.ap.allActivePlayers(cfg.clubRecord)
+
             print ('Show all players retrieved')
             print (self.existingPlayers)
             # self.existingPlayers = list(Player.select().orderBy('FirstName'))
 ##            print (self.existingPlayers)
             self.playersInDbms = []
 #            print (self.existingPlayers[0].FirstName)
+            # always leve room for the active asterisk
             for p in self.existingPlayers:
-                self.playersInDbms.append(p.LastName + ', ' +p.FirstName)
+                if p.Active > 0:
+                    self.playersInDbms.append(' * ' + p.LastName + ', ' +p.FirstName)
+                else:
+                    self.playersInDbms.append('   ' + p.LastName + ', ' + p.FirstName)
             # build listbox
             self.players.set(self.playersInDbms)
             self.exp = tk.Listbox(self.oldPlayerPanel,
                                   listvariable=self.players,
                                   height = 20
                                   )
-            self.exp.grid(row = 0, column = 0)
+            self.exp.grid(row = 1, column = 0, columnspan = 2)
             
             self.scrollbar = tk.Scrollbar(self.oldPlayerPanel)
-            self.scrollbar.grid(row=0, column=1, sticky ='ns')
+            self.scrollbar.grid(row=1, column=2, sticky ='ns')
             self.exp.config(yscrollcommand=self.scrollbar.set)
             self.scrollbar.config(command=self.exp.yview)
 

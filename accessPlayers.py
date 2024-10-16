@@ -20,7 +20,8 @@ class AccessPlayers (object):
 		# club as Club sqlobject
 		# active == 0 indicates inactive player
 		# returns an unsorted list
-		players = list(Player.select(Player.q.active > 0))
+		players = list(Player.select(Player.q.Active > 0))
+		return players
 	def singlePlayerByLastName(self, club, lname):
 		return list(Player.select(Player.q.LastName == lname))[0]
 	def singlePlayerByFirstandLastNames(self,fname,lname):
