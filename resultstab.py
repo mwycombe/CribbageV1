@@ -814,6 +814,7 @@ class ResultsTab(tk.Frame):
     # def reCalc(self):
     #     # cheap way - just re-display everything like we had entered
     #     self.buildScoringPanels()
+    #     to change active status, go back to playerstab
     def populatePframe(self):
         # self.textIndex = 2      # index of name text in pframe child
         self.allPlayerObjects = cfg.ap.allActivePlayers(cfg.clubRecord)
