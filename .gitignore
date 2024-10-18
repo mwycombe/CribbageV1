@@ -1,4 +1,4 @@
-        .idea
+        .idea/
         Pipfile
         Pipfile.lock
         Seniors.cfg
@@ -8,4 +8,4 @@
         peggers - Copy.cfg
         peggers.cfg
         person.db
-        /venv
+        venv/
