@@ -77,7 +77,7 @@ class TourneysTab (tk.Frame):
         self.keyF6 = tk.Label(self.tourneysPanel,
                               text = 'F6 - Enter results for selected tourney',
                               fg='green',
-                              font=('Helvetica', '9', 'bold'))
+                              font=('Helvetica', '12', 'bold'))
         self.keyF6.grid(row=0, column=0, sticky='w')
 
         # [create tourney section]
@@ -389,6 +389,7 @@ class TourneysTab (tk.Frame):
         # self.existingTourneys.update()
         self.existingTourneys.selection_set(0)
         self.existingTourneys.activate(0)
+        self.existingTourneys.see(0)
         self.existingTourneys.focus_force()
     def clearListBoxes(self):
         self.existingTourneys.delete(0, tk.END)

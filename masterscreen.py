@@ -192,6 +192,10 @@ class MasterScreen (tk.LabelFrame):
         # self.notebook.bind("<<NotebookTabChanged>>",self.tabchange)
         # set this from the module that cares to track tabchanges
         # tabs within this notebook will register themselves
+
+    def tabchange(self,event):
+        print ('Tab changed:= ' + event)
+
 if __name__ == '__main__':
 
     # fake set up global cfg module for all others to share just for standalone testing

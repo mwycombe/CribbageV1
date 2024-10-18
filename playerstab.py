@@ -108,7 +108,30 @@ class PlayersTab (tk.Frame):
         self.showAll.grid(row=0, column=1)
         # for testing
         self.showAllPlayers.set(1)
+    #*****************************************************
+    #       list box that shows players
+    #
+        self.exp = tk.Listbox(self.oldPlayerPanel,
+                              listvariable=self.players,
+                              height=20
+                              )
+        self.exp.grid(row=1, column=0, columnspan=2)
 
+        self.scrollbar = tk.Scrollbar(self.oldPlayerPanel)
+        self.scrollbar.grid(row=1, column=2, sticky='ns')
+        self.exp.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.config(command=self.exp.yview)
+
+        #
+        # allow ListBox entry to respond to double click for editing
+        #
+        # TODO: F2 will edit player, F3 to create new player, F9 to delete player
+
+        # # [binding section]
+        # Do this binding everytime we recreate the listbox of players
+        self.exp.bind('<F2>', self.editSelectedPlayer)
+        self.exp.bind('<F3>', self.createPlayer)
+        self.exp.bind('<F9>', self.toggleAPlayer)
         self.noPlayers = tk.Label(self.oldPlayerPanel,
                                    text='There are no existing players',
                                    relief='raised',
@@ -226,30 +249,55 @@ class PlayersTab (tk.Frame):
                     self.playersInDbms.append('   ' + p.LastName + ', ' + p.FirstName)
             # build listbox
             self.players.set(self.playersInDbms)
-            self.exp = tk.Listbox(self.oldPlayerPanel,
-                                  listvariable=self.players,
-                                  height = 20
-                                  )
-            self.exp.grid(row = 1, column = 0, columnspan = 2)
-            
-            self.scrollbar = tk.Scrollbar(self.oldPlayerPanel)
-            self.scrollbar.grid(row=1, column=2, sticky ='ns')
-            self.exp.config(yscrollcommand=self.scrollbar.set)
-            self.scrollbar.config(command=self.exp.yview)
-
+            # self.exp = tk.Listbox(self.oldPlayerPanel,
+            #                       listvariable=self.players,
+            #                       height = 20
+            #                       )
+            # self.exp.grid(row = 1, column = 0, columnspan = 2)
             #
-            # allow ListBox entry to respond to double click for editing
+            # self.scrollbar = tk.Scrollbar(self.oldPlayerPanel)
+            # self.scrollbar.grid(row=1, column=2, sticky ='ns')
+            # self.exp.config(yscrollcommand=self.scrollbar.set)
+            # self.scrollbar.config(command=self.exp.yview)
             #
-            # TODO: F2 will edit player, F3 to create new player, F9 to delete player
-
+            # #
+            # # allow ListBox entry to respond to double click for editing
+            # #
+            # # TODO: F2 will edit player, F3 to create new player, F9 to delete player
+            #
             # # [binding section]
             # Do this binding everytime we recreate the listbox of players
             self.exp.bind('<F2>', self.editSelectedPlayer)
             self.exp.bind('<F3>', self.createPlayer)
             self.exp.bind('<F9>', self.toggleAPlayer)
+            self.exp.bind('<Double-1>',self.togglePlayer)
         # set focus and selection for listbox
         self.exp.selection_set(0)
         self.exp.focus_force()
+
+    #***********************************************************
+    #   handler for double-click player state toggle
+    def togglePlayer(self,event):
+        # convert the double-click position into a selection
+        self.exp.selection_clear(0,tk.END)     # clear any current selection
+        self.lbIndex = self.exp.nearest(event.y)
+        self.playerInExpName = self.exp.activate(self.lbIndex)
+        # strip any * then trim blanks from name
+        self.lbText = self.exp.get(self.lbIndex)
+        # print ('Selected ' + self.lbText)
+        # print ('Cleaned up <' + self.lbText.replace('*',' ').strip() + '>')
+        # print('Player pid:= ' + str(cfg.playerRefx[self.lbText.replace('*',' ').strip()]))
+        self.playerToToggle = cfg.ap.getPlayerById(str(cfg.playerRefx[self.lbText.replace('*',' ').strip()]))
+        # print(self.playerToToggle.LastName + ' Active:= ' + str(self.playerToToggle.Active))
+        # toggle the active status - 0 is inactive; <>0 is active
+        if self.playerToToggle.Active == 0:
+            self.playerToToggle.Active = 1
+        else:
+            self.playerToToggle.Active = 0
+        # print ('Post Toggle ' + self.playerToToggle.LastName + ' Active:= ' + str(self.playerToToggle.Active))
+        # and refresh the list of players
+        self.displayExistingPlayers()
+
     #************************************************************
     #
     def submitNewPlayer(self, event):
@@ -767,5 +815,5 @@ class PlayersTab (tk.Frame):
     def testDateIsNone(self, dateValue):
         return dateValue  if dateValue is None else self.makeUSDate(dateValue)
     def reBuildXrefs(self):
-        cfg.playerXref = {p.id: p.LastName + ', ' + p.FirstName for p in list(Player.select())}
-        cfg.playerRefx = {v: k for k, v in cfg.playerXref.items()}
+        # cfg.playerXref = {p.id: p.LastName + ', ' + p.FirstName for p in list(Player.select())}
+        CribbageStartup.createPlayersXRef()

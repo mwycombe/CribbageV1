@@ -9,7 +9,7 @@
 #
 #####################################################################
 #   TODO:   Make sure top player is selected in listbox after Enter of results
-#   TODO:   Check that results are saved before exiting results tab
+#   TODO:   *** Check that results are saved before exiting results tab
 #   TODO:   Replace in situ entry/edit with pull out line above results
 #   TODO:   Results edit changed entry order; duplicates entry in dbms on Enter accept
 #   TODO:   Allow new entry, old edit, old delete
@@ -27,8 +27,8 @@
 #   TODO:   If any results exist for a tourney then update the entered indicator in tourney row
 #   TODO:   Implement concept of commit or quit or pause tourney entry
 #   TODO:   Can implement pause using F11 to force partial commit
-#   TODO:   Check that there is a tourney selected when F6 is pressed to enter results.
-#   TODO:   Warn if leaving results page without saving what has been entered so far.
+#   TODO:   Check that there is a tourney selected when F6 is pressed to enter results - this is in Tourney Tab, not results...
+#   TODO:   *** Warn if leaving results page without saving what has been entered so far.
 # System imports
 import tkinter as tk
 from tkinter import ttk
@@ -218,7 +218,7 @@ class ResultsTab(tk.Frame):
 
         # label headers
         self.resultsNameLabel = tk.Label(self.resultsInputPanel,
-                                        width=15, text='Names')
+                                        width=15, text='Name')
         self.resultsGpLabel = tk.Label(self.resultsInputPanel,
                                        width=4, text=' Gp ')
         self.resultsGwLabel = tk.Label(self.resultsInputPanel,
@@ -243,9 +243,10 @@ class ResultsTab(tk.Frame):
         self.resultsOrderLabel.grid(row=0, column=7, sticky='w')
 
         # entry fields
-        # Name is disabled - autofilled; skunks Gvn is computed and autofilled
+        # Name is disabled - autofilled; skunks Gvn is computed and autofilled as is order
         self.resultsNameEntry = tk.Entry(self.resultsInputPanel, width=20,
                                          state=tk.DISABLED,
+                                         font=('Helvetica','12','bold'),
                                          textvariable=self.resultsNameVar)
         self.resultsGpEntry = tk.Entry(self.resultsInputPanel, width=4,
                                        textvariable=self.resultsGpVar,
@@ -285,6 +286,9 @@ class ResultsTab(tk.Frame):
         self.resultsSprdEntry.bind('<Return>', self.handleResultLine)
         self.resultsCashEntry.bind('<Return>', self.handleResultLine)
         self.resultsTknEntry.bind('<Return>', self.handleResultLine)
+        self.resultsGvnEntry.bind('<Return>', self.handleResultLine)
+        self.resultsOrderEntry.bind('<Return>', self.handleResultLine)
+
         # allow user to quit entering a result line
         self.resultsNameEntry.bind('<Escape>', self.quitResultLine)
         self.resultsGpEntry.bind('<Escape>', self.quitResultLine)
@@ -292,6 +296,8 @@ class ResultsTab(tk.Frame):
         self.resultsSprdEntry.bind('<Escape>', self.quitResultLine)
         self.resultsCashEntry.bind('<Escape>', self.quitResultLine)
         self.resultsTknEntry.bind('<Escape>', self.quitResultLine)
+        self.resultsGvnEntry.bind('<Escape>', self.quitResultLine)
+        self.resultsOrderEntry.bind('<Escape>', self.quitResultLine)
 
         # hide edit panel for now
         self.hideResultsInputPanel()
@@ -302,23 +308,24 @@ class ResultsTab(tk.Frame):
 
         # now set up the scrolled panels - clones from results1.py
         self.playerPanel = tk.LabelFrame(self.results,
-                                          relief='sunken',
+                                          relief='ridge',
                                           height='10c',
                                           width='10c',
                                           padx = '5', pady='5',
                                           text='Select Players')
         self.playerPanel.grid(row=1, column=0, sticky='nsew')
 
-        self.resultsPanel = tk.LabelFrame(self.results,
-                                           relief='sunken',
+        self.tourneyResultsPanel = tk.LabelFrame(self.results,
+                                           relief='ridge',
                                            height='10c',
                                            width='5c',
                                            padx = '5', pady ='5',
                                            text='Tourney Results')
-        self.resultsPanel.grid(row=1, column=1, columnspan=2, sticky='nsew')
+        self.tourneyResultsPanel.grid(row=1, column=1, columnspan=2, sticky='nsew')
 
         # start by assuming not an edit
         cfg.tourneyEdit = False
+
     # ************************************************************
     #   check to see if our tab was selected.
     #
@@ -332,7 +339,7 @@ class ResultsTab(tk.Frame):
         print('**Resultstab got the notebook changed event***')
 
         # TODO this has to be deferred until after the tourney date has been selected
-        # TODO if entered without a selection, issues message and return to tab entry state
+        # TODO if entered without a selection, issues message and return to tourneytab for selection
         self.buildActivityPanel()
         self.buildScoringPanels()
         # position in player panel for now
@@ -364,7 +371,7 @@ class ResultsTab(tk.Frame):
         self.keyF10 = tk.Label(lap, text = 'F10  Save the results as entered')
         self.keyF11 = tk.Label(rap, text = 'F11  Force save of partial tourney or with diff')
         self.keyEsc = tk.Label(lap, text = "Esc  Quit what your're doing")
-        self.button = tk.Label(rap, text = 'Click  Sorts tourney results by column order')
+        # self.button = tk.Label(rap, text = 'Click  Sorts tourney results by column order')
         self.keyF2.grid(row=0, column=0, sticky='w')
         self.keyF3.grid(row=0, column=0, sticky='w')
         self.keyF4.grid(row=1, column=0, sticky='w')
@@ -372,7 +379,7 @@ class ResultsTab(tk.Frame):
         self.keyF10.grid(row=2, column=0, sticky='w')
         self.keyF11.grid(row=2, column=0, sticky='w')
         self.keyEsc.grid(row=3, column=0, sticky='w')
-        self.button.grid(row=3, column=0, sticky='w')
+        # self.button.grid(row=3, column=0, sticky='w')
 
         self.populateResultsHeaderPanel()
 
@@ -450,7 +457,6 @@ class ResultsTab(tk.Frame):
         self.diffSkunksLabel.grid(row = 2, column = 3, sticky = 'w')
 
     def buildScoringPanels(self):
-        # TODO: Check for residual in-memory results - and use them - else retrieve from dbms
         self.tourneyDateLabel = tk.Label(self.tourneyHeaderPanel,
                                        text='Tourney Date:')
         self.tourneyDateLabel.grid(row=0, column=0, sticky='w')
@@ -490,7 +496,7 @@ class ResultsTab(tk.Frame):
     #     self.diffPoints.set(self.plusPoints.get() - self.minusPoints.get())
     #     self.diffSkunks.set(self.givenSkunks.get() - self.takenSkunks.get())
     #
-    # # def returnFromResultsPanel(self):
+    # # def returnFromtourneyResultsPanel(self):
     # #     # self.create_widgets()        # just rebuild everything
     # #     self.populatePframe()
     def createWidgets(self):
@@ -521,6 +527,7 @@ class ResultsTab(tk.Frame):
         self.pListOfListboxes.append(self.playerPointsListBox)
 
         for lb in self.pListOfListboxes:
+            lb.selection_clear(0,tk.END)
             lb.selection_set(0)
             lb.activate(0)
         self.pListOfListboxes[0].focus_force()
@@ -531,8 +538,11 @@ class ResultsTab(tk.Frame):
             lb.bind('<Up>', self.p_UpDownHandler)
             lb.bind('<Down>', self.p_UpDownHandler)
 
+        # add alpha search to list box of names
+        self.pListOfListboxes[0].bind('<Key>', self.on_key_press)
+
         # rHdrPanel holds the listbox labels
-        self.rHdrPanel = tk.Frame(self.resultsPanel)
+        self.rHdrPanel = tk.Frame(self.tourneyResultsPanel)
         self.rHdrPanel.grid(row = 0, column = 0, stick = 'ew')
         self.nameHdr = tk.Button(self.rHdrPanel, text = 'Names',
                                  font=('Helvetica', '10', 'bold'),
@@ -569,7 +579,7 @@ class ResultsTab(tk.Frame):
 
         self.initializeSortDictionary()
         # rDtlPanel holds the listboxes of names and results
-        self.rDtlPanel = tk.Frame(self.resultsPanel)
+        self.rDtlPanel = tk.Frame(self.tourneyResultsPanel)
         self.rDtlPanel.grid(row = 1, column = 0, sticky='w')
 
         # rDtlPanel is going to hold the various result listboxes
@@ -633,8 +643,8 @@ class ResultsTab(tk.Frame):
         self.rListOfListboxes.append(self.resultsOrderLB)
 
 
-        self.listOfPlayers = []
-        self.listOfResults = []
+        # self.listOfPlayers = []
+        # self.listOfResults = []
 
         self.tourneyResultsCount = cfg.ar.countTourneyResults(cfg.tourneyRecord)
         self.tourneyResults = []
@@ -653,7 +663,11 @@ class ResultsTab(tk.Frame):
         self.populatePframe()
         self.populateRframe()
 
+        self.goToTopOfPlayers()
+
+        #****************************************************
         # bind section
+        #****************************************************
         # F2 can be activated from Players or Results list box
         # F3 can only be recongnized from Players
         # F7 switches back to list of  Players
@@ -670,9 +684,10 @@ class ResultsTab(tk.Frame):
             lb.bind('<F10>', self.commitResults)
             lb.bind('<F11>', self.forceResultsCommit)
             lb.bind('<Escape>', self.quitResults)
+
+        # for lb in self.rListOfListboxes:
         for lb in self.rListOfListboxes:
             lb.bind('<F2>', self.editResultsFromResults)
-        # for lb in self.rListOfListboxes:
             lb.bind('<F9>', self.deleteResultLine)
             lb.bind('<F7>', self.backToPlayers)
             lb.bind('<F10>', self.commitResults)
@@ -689,10 +704,9 @@ class ResultsTab(tk.Frame):
         self.gvnHdr.bind('<1>', self.rSortHandler)
         self.orderHdr.bind('<1>', self.rSortHandler)
 
-
         self.updateTotals()
 
-    # multilistbox handler area for players
+    # multi-listbox handler area for players
     def p_OnVsb(self, *args):
         for lb in self.pListOfListboxes:
             lb.yview(*args)
@@ -722,7 +736,7 @@ class ResultsTab(tk.Frame):
                 lb.selection_clear(0, tk.END)
                 lb.selection_set(selection)
 
-    # multilistbox handler area for results
+    # multil-istbox handler area for results
     def r_OnVsb(self, *args):
         for lb in self.rListOfListboxes:
             lb.yview(*args)
@@ -752,13 +766,57 @@ class ResultsTab(tk.Frame):
                 lb.selection_clear(0, tk.END)
                 lb.selection_set(selection)
 
+    #***************************************************
+    # alpha name search handler
+    def on_key_press(self, event):
+        lb = self.pListOfListboxes[0]
+        pb = self.pListOfListboxes[1]
+        if event.char.isalpha():
+            # get the current selection tuple of indexes - empty tuple if nothing
+            current_selection = lb.curselection()
+            if current_selection:
+                current_index = current_selection[0]
+            else:
+                # search from top - no current selection
+                self.searchAlphaFromTop(lb,pb,event.char.lower())
+                return
+            if lb.get(current_index + 1).lower().startswith(event.char.lower()):
+                # next item is another hit
+                self.setAlphaPosition(lb,pb,current_index + 1)
+            else:
+                self.searchAlphaFromTop(lb,pb,event.char.lower())
+                return
+
+    def searchAlphaFromTop(self,lb,pb,lowAlpha):
+        for ix in range(0,lb.size()):
+            item = lb.get(ix)
+            if item.lower().startswith(lowAlpha):
+                self.setAlphaPosition(lb, pb,ix)
+                return
+        # if we didn't return then no match found
+        self.resetAlphaTop(lb,pb)
+
+    def setAlphaPosition(self,lb,pb,ix):
+        lb.selection_clear(0,tk.END)
+        lb.selection_set(ix)
+        lb.see(ix)
+        lb.activate(ix)
+        pb.selection_clear(0,tk.END)
+        pb.selection_set(ix)
+        pb.see(ix)
+        pb.activate(ix)
+
+        # ensure we can see it
+
+    def resetAlphaTop(self,lb,pb):
+        self.setAlphaPosition(lb,pb,0)
 
     # def reCalc(self):
     #     # cheap way - just re-display everything like we had entered
     #     self.buildScoringPanels()
     def populatePframe(self):
         # self.textIndex = 2      # index of name text in pframe child
-        self.allPlayerObjects = cfg.ap.playersByLastName(cfg.clubRecord)
+        self.allPlayerObjects = cfg.ap.allActivePlayers(cfg.clubRecord)
         self.listOfPlayerNames = [pn.LastName + ', ' + pn.FirstName for pn in self.allPlayerObjects]
         # get all results for this one tourney
         self.allTourneyResultObjects = cfg.ar.allTourneyResults(cfg.tourneyRecord)
@@ -974,7 +1032,7 @@ class ResultsTab(tk.Frame):
         pId = cfg.playerRefx[self.playerNameListBox.get(self.playerNameListBox.curselection()[0])]
         matchingResultLine = self.findResultLineByPid(pId)
         if matchingResultLine >= 0:
-            # highlith resultsLine if we found and entry for the player
+            # highliht resultsLine if we found and entry for the player
             self.resultsNamesLB.selection_set(matchingResultLine)
             if mbx.askokcancel('Confirm Delete', 'Do you really want to delete this results?') == True:
                 self.deleteResult(pId)
@@ -1031,12 +1089,14 @@ class ResultsTab(tk.Frame):
                 rlb.selection_set(0)
         else:
             self.goToTopOfPlayers()
+
     def goToTopOfPlayers(self):
         for plb in self.pListOfListboxes:
+            plb.selection_clear(0,tk.END)
             plb.selection_set(0)
+            plb.activate(0)
+        self.pListOfListboxes[0].see(0)
         self.pListOfListboxes[0].activate(0)
-        self.pListOfListboxes[0].activate(0)
-        self.pListOfListboxes[0].focus_force()
     def handleResultLine(self, event):
         # validate entry line then leave in listOfResults in memory if new tourney, else update dbms immediately
         # input could be a correction to an existing line for a new or existing tourney.
@@ -1517,6 +1577,7 @@ class ResultsTab(tk.Frame):
         w.grid_remove()
     def showWidget(self, w):
         w.grid()
+
 if __name__ == "__main__":
     #############################################
     # hardwire cfg for testing                  #
