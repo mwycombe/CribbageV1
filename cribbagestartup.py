@@ -16,6 +16,8 @@ from tkinter import messagebox as mbx
 from tkinter import filedialog as fdg
 import sys as sys
 import os as os
+from tkinter.messagebox import askokcancel
+
 from sqlobject import *
 
 # Personal imports
@@ -83,6 +85,8 @@ class CribbageStartup ():
         print ('season:= ' + cfg.season)
         print ('clubNumber:= ' + str(cfg.clubNumber))
 
+        if not mbx.askokcancel('Using Data Base',cfg.dbmsDirectory + cfg.dbmsName):
+            os.exit('Wrong data base in use')
         # see if we can connect to the database
         try:
             # validate where we are trying to connect to the database

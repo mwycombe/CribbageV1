@@ -1,0 +1,11 @@
+        .idea/
+        Pipfile
+        Pipfile.lock
+        Seniors.cfg
+        __pycache__/
+        db100.sqlite3
+        importGR5Players
+        peggers - Copy.cfg
+        peggers.cfg
+        person.db
+        venv/

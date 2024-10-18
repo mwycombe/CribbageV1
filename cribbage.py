@@ -148,7 +148,7 @@ class Cribbage (ttk.Frame):
 	def buildPanels (self, parent=None):
 		# build master inside senior panel
 		# master sets up the notebook panel to be used by all tabs
-		MasterScreen(self)
+		MasterScreen(parent)
 		# build out the tabs into notebook and self register themselves
 		# when done, postion in first tab
 
@@ -160,7 +160,7 @@ class Cribbage (ttk.Frame):
 		HelpTab(cfg.screenDict['notebook'])
 		cfg.screenDict['notebook'].select(1)    # reposition back at TourneysAtb
 
-		self.setEventCapture()
+		self.setNotebookEventCapture()
 
 	# def openAccessModules(self):
 	# 	# create an instance of each access module in cfg
@@ -171,7 +171,7 @@ class Cribbage (ttk.Frame):
 	#************************************************************
 	#   capture notebook tab events one place
 	#
-	def setEventCapture(self):
+	def setNotebookEventCapture(self):
 		print ('generic notebook tab event capture')
 		cfg.screenDict['notebook'].bind('<<NotebookTabChanged>>',self.tabChange)
 
@@ -200,7 +200,12 @@ class Cribbage (ttk.Frame):
 
 if __name__ == '__main__':
 
-	# call class level init method
+	if 'root' not in cfg.screenDict:
+		root = tk.Tk()
+		root.resizable(True, True)
+		cfg.screenDict['root'] = root
+
+	# call class level init methods
 	print ('Starting cribbage...')
 	CribbageStartup.initDbms()
 	CribbageStartup.createPlayersXref()
@@ -209,13 +214,11 @@ if __name__ == '__main__':
 
 	# put root frame object into config module dictionary
 
-	if 'root' not in cfg.screenDict:
-		root = tk.Tk()
-		cfg.screenDict['root'] = root
+
 	print ('In peggers ... screenDict:= ', cfg.screenDict)
 	# make resizeable
-	cfg.screenDict['root'].rowconfigure(0, weight=1, uniform='a')
-	cfg.screenDict['root'].columnconfigure(0, weight=1, uniform='a')
+	cfg.screenDict['root'].rowconfigure(0, weight=1)
+	cfg.screenDict['root'].columnconfigure(0, weight=1)
 	cfg.screenDict['root'].resizable(True, True)
 
 
