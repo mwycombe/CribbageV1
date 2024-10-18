@@ -86,7 +86,7 @@ class CribbageStartup ():
         print ('clubNumber:= ' + str(cfg.clubNumber))
 
         if not mbx.askokcancel('Using Data Base',cfg.dbmsDirectory + cfg.dbmsName):
-            os.exit('Wrong data base in use')
+            sys.exit('Wrong data base in use')
         # see if we can connect to the database
         try:
             # validate where we are trying to connect to the database
@@ -100,7 +100,7 @@ class CribbageStartup ():
             # action to the higher level
         except:
             print ('Unable to locate data base - terminating')
-            os._exit(-1)
+            sys._exit(-1)
 
 
         # global reference variables
