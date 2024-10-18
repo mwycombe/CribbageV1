@@ -128,8 +128,6 @@ class ResultsTab(tk.Frame):
         #
         #####################################################
 
-        self.pListOfListboxes = []      # synchronized player names and points list boxes
-        self.rListOfListboxes = []      # synchronized results list boxes
 
         self.results = tk.LabelFrame(self,
                                      relief = 'sunken',
@@ -504,6 +502,12 @@ class ResultsTab(tk.Frame):
         # TODO: Add sort feature to the Tourney Results columns
         # TODO: Now depends on the in-memory list of resultLine objects
 
+        # always start with another next list of listboxes
+
+        self.pListOfListboxes = []      # synchronized player names and points list boxes
+        self.rListOfListboxes = []      # synchronized results list boxes
+
+
         # create synchronized listboxes to hold players and points
         self.playerPointsListBoxLabel = tk.Label(self.playerPanel, text='Points')
         self.playerNameListBoxLabel = tk.Label(self.playerPanel, text='Player Name')
@@ -539,6 +543,8 @@ class ResultsTab(tk.Frame):
             lb.bind('<Down>', self.p_UpDownHandler)
 
         # add alpha search to list box of names
+        self.pListOfListboxes[0].focus_set()
+        self.pListOfListboxes[0].unbind('<key>')
         self.pListOfListboxes[0].bind('<Key>', self.on_key_press)
 
         # rHdrPanel holds the listbox labels
