@@ -25,3 +25,6 @@
 ## Active players
 1. Change activity status by going to the Players Tab
 2. For Results entry, go to Players Tab for now to make players active as needed
+
+## Default focus on first entry
+1,  Does not appear to want to work...
