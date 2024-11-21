@@ -57,10 +57,10 @@ class TourneysTab (tk.Frame):
         self.deleteDate = tk.StringVar()
         self.selectedResultsTourney = ''
         self.tourneyToDelete = ''       # holds tourney record for deleting
-        self.unsortedTourneys = []      # unstored all tourney records for club, season
-        self.tourneysByNumber = []        # holds tourney records sorted by number
+        self.unsortedTourneys = []      # unsorted all tourney records for club, season
+        self.tourneysByNumber = []      # holds tourney records sorted by number
         self.tourneysByDate = []        # tourneys sorted by date
-        self.editingState = ''   #1 = creating #2 = editing #3 = deleting
+        self.editingState = ''          #1 = creating #2 = editing #3 = deleting
         # build out tab and register with notebook
         self.config(padx = 5, pady = 5)
         parent.add(self,text='Tourneys')

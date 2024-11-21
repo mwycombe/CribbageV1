@@ -742,7 +742,7 @@ class ResultsTab(tk.Frame):
                 lb.selection_clear(0, tk.END)
                 lb.selection_set(selection)
 
-    # multil-istbox handler area for results
+    # multil-listbox handler area for results
     def r_OnVsb(self, *args):
         for lb in self.rListOfListboxes:
             lb.yview(*args)
@@ -1104,6 +1104,11 @@ class ResultsTab(tk.Frame):
             plb.activate(0)
         self.pListOfListboxes[0].see(0)
         self.pListOfListboxes[0].activate(0)
+        self.pListOfListboxes[0].focus_force()
+        # print (self.pListOfListboxes[0].get(0))
+
+        # self.pListOfListboxes[0].selection_set(0)
+        # self.pListOflistboxes[0].focus_force()
     def handleResultLine(self, event):
         # validate entry line then leave in listOfResults in memory if new tourney, else update dbms immediately
         # input could be a correction to an existing line for a new or existing tourney.
