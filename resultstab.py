@@ -124,7 +124,7 @@ class ResultsTab(tk.Frame):
         #####################################################
         #
         #   set up the panels and areas for selecting players
-        #   for this tournament and enterering their results
+        #   for this tournament and entering their results
         #
         #####################################################
 
@@ -742,7 +742,7 @@ class ResultsTab(tk.Frame):
                 lb.selection_clear(0, tk.END)
                 lb.selection_set(selection)
 
-    # multil-listbox handler area for results
+    # multi-listbox handler area for results
     def r_OnVsb(self, *args):
         for lb in self.rListOfListboxes:
             lb.yview(*args)
