@@ -352,6 +352,7 @@ class ReportsTab (tk.Frame):
         self.resetSelections()
     def resetSelections(self):
         self.allReportsVar.set(0)
+        self.alphaVar.set(0)
         self.battingAvgVar.set(0)
         self.cashVar.set(0)
         self.individStatsVar.set(0)
