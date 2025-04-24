@@ -552,28 +552,28 @@ class ResultsTab(tk.Frame):
         self.rHdrPanel.grid(row = 0, column = 0, stick = 'ew')
         self.nameHdr = tk.Button(self.rHdrPanel, text = 'Names',
                                  font=('Helvetica', '10', 'bold'),
-                                 takefocus=0, bd=0, width=17)
+                                 takefocus=0, bd=0, width=12)
         self.gpHdr = tk.Button(self.rHdrPanel, text = 'Gp',
                                font=('Helvetica', '10', 'bold'),
-                               takefocus=0, bd=0, width=4)
+                               takefocus=0, bd=0, width=3)
         self.gwHdr = tk.Button(self.rHdrPanel, text='Gw',
                                font=('Helvetica', '10', 'bold'),
-                               takefocus=0, bd=0, width=4)
+                               takefocus=0, bd=0, width=3)
         self.sprdHdr = tk.Button(self.rHdrPanel, text='Sprd',
                                  font=('Helvetica', '10', 'bold'),
                                  takefocus=0, bd=0, width=3)
         self.cashHdr = tk.Button(self.rHdrPanel, text=" $'s",
                                  font=('Helvetica', '10', 'bold'),
-                                 takefocus=0, bd=0, width=4)
+                                 takefocus=0, bd=0, width=2)
         self.tknHdr = tk.Button(self.rHdrPanel, text='Tkn',
                                 font=('Helvetica', '10', 'bold'),
-                                takefocus=0, bd=0, width=4)
+                                takefocus=0, bd=0, width=3)
         self.gvnHdr = tk.Button(self.rHdrPanel, text='Gvn',
                                 font=('Helvetica', '10', 'bold'),
                                 takefocus=0, bd=0, width=3)
         self.orderHdr = tk.Button(self.rHdrPanel, text='Order',
-                                  font=('Helvetica', '10', 'bold'),
-                                  takefocus=0, bd=0, width=4)
+                                  font=('Helvetica', '9', 'bold'),
+                                  takefocus=0, bd=0, width=3)
         self.nameHdr.grid(row = 0, column = 0, sticky = 'w')
         self.gpHdr.grid(row = 0, column = 1, sticky = 'w')
         self.gwHdr.grid(row = 0, column = 2, sticky = 'w')

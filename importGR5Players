@@ -1,0 +1,71 @@
+#importGR5Players.py
+# reads in the member player file from GR5, parses them, then create
+# sqlobjects that are inserted into the slqite database
+import os
+import sys
+from sqlobject import *
+import player
+import club
+
+# init database connection
+connection_string = ''
+try:
+	connection_string = 'sqlite:' + 'c:/Cribbage/Peggers/dbms/' + 'PyPeggers.sqlite3'
+	print('connection_string =', connection_string)
+	conn = connectionForURI(connection_string)
+	sqlhub.processConnection = conn
+except:
+	print ('Unable to locate data base: ',connection_string)
+	print ('...terminating.')
+
+listOfPlayers = []
+
+with open('c:/Cribbage/Files_From_GR5/Edited-MEMBERS.LCL','r') as f:
+
+	allPlayers = f.read()
+
+listOfPlayers = allPlayers.splitlines()
+print(len(listOfPlayers))
+print(listOfPlayers)
+
+eachPlayer = [ [listOfPlayers[x],listOfPlayers[x+1],listOfPlayers[x+2]] for x in range(0,len(listOfPlayers), 3)]
+
+print('Number of players = ',len(eachPlayer))
+
+firstName   = ''
+lastName    = ''
+accNumber   = ''
+street      = ''
+phone       = ''
+city        = ''
+zip         = ''
+for listEntry in eachPlayer:
+	print (listEntry)
+	lastName,firstName = listEntry[0].split(',',1)
+	lastName = lastName.strip()
+	accNumber = firstName[-10:]
+	accNumber = accNumber.strip()
+	firstName = firstName[:15]
+	firstName = firstName.strip()
+	# accNumber = accNumber.[-10:]
+	# accNumber = accNumber.strip()
+	phone = listEntry[1][-16:]
+	# phone = phone[0]
+	phone = phone.strip()
+	street = listEntry[1][:30]
+	# street  = street[0]
+	street = street.strip()
+	city, zip = listEntry[2].split(',',1)
+	city = city.strip()
+	zip = zip.strip()
+	print (firstName, ' ',lastName,' ',street, ' ',city,' ',zip,' ',phone,' ',accNumber)
+	player.Player(FirstName = firstName,
+			        LastName = lastName,
+	                Street = street,
+			        City = city,
+			        State = zip,
+			        Phone = phone,
+			        ClubID = 2,
+			        ACCNumber = accNumber,
+			        Active = True
+			        )

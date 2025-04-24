@@ -39,6 +39,7 @@ from datetime import date
 
 import alphareport
 # Personal imports
+import PyPDF2 as pdf
 import cribbageconfig as cfg
 import cribbagereport as rpt
 import alphareport
@@ -74,6 +75,7 @@ class ReportsTab (tk.Frame):
         self.qtrFullVar = tk.IntVar()
         self.skunksVar = tk.IntVar()
         self.tourneyVar = tk.IntVar()
+        self.mergedVar = tk.IntVar()
 
         # build stack of selections
         rpt.reportStack = {}
@@ -229,26 +231,35 @@ class ReportsTab (tk.Frame):
                                               width = 20,
                                               variable = self.skunksVar
                                               )
-        self.tourneyChoice = tk.Checkbutton(self.selectPanel,
-                                              text = 'Tourney Report',
-                                              onvalue = 1, offvalue = 0,
-                                              anchor = 'w',
-                                              height = 1,
-                                              width = 20,
-                                              variable = self.tourneyVar
-                                              )
 
+        self.tourneyChoice = tk.Checkbutton(self.selectPanel,
+                                            text = 'Tourney Report',
+                                            onvalue = 1, offvalue = 0,
+                                            anchor = 'w',
+                                            height = 1,
+                                            width = 20,
+                                            variable = self.tourneyVar
+                                            )
+        self.mergedChoice = tk.Checkbutton(self.selectPanel,
+                                            text='Merged Reports',
+                                            onvalue=1, offvalue=0,
+                                            anchor='w',
+                                            height=1,
+                                            width=20,
+                                            variable=self.mergedVar
+                                            )
         self.rptsPanel.columnconfigure(0, weight=1)
-        self.allChoice.grid(row = 0, column = 0, sticky = 'w')
-        self.alphaChoice.grid(column = 0, sticky='w')
-        self.battingAvgChoice.grid(column = 0, sticky='w')
-        self.cashChoice.grid(column = 0, sticky='w')
-        self.individStatsChoice.grid(column = 0, sticky='w')
-        self.natAllChoice.grid(column = 0, sticky='w')
-        self.qtrDropChoice.grid(column = 0, sticky='w')
-        self.qtrFullChoice.grid(column = 0, sticky='w')
+        self.allChoice.grid(row=0, column=0, sticky='w')
+        self.alphaChoice.grid(column=0, sticky='w')
+        self.battingAvgChoice.grid(column=0, sticky='w')
+        self.cashChoice.grid(column=0, sticky='w')
+        self.individStatsChoice.grid(column=0, sticky='w')
+        self.natAllChoice.grid(column=0, sticky='w')
+        self.qtrDropChoice.grid(column=0, sticky='w')
+        self.qtrFullChoice.grid(column=0, sticky='w')
         self.skunkChoice.grid(column = 0, sticky='w')
         self.tourneyChoice.grid(column = 0, sticky='w')
+        self.mergedChoice.grid(column = 0, sticky='w')
         self.buildActivityPanel()
     def buildActivityPanel(self):
         MasterScreen.wipeActivityPanel()
@@ -341,6 +352,12 @@ class ReportsTab (tk.Frame):
                 runReport()
                 # rpt = v[1]
                 # print('Run ', v[1])
+        # check to see if mergedreports is requested
+        if mergedVar :
+            # merge all of the created reports
+            pass    # do nothing right now
+        # get list of reports generated and folder and create merged report
+
         # after all reports have been run, show msgbox and clean up.
         self.reportsFinished()
     def reportsFinished(self):
