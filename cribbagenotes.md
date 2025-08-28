@@ -1,3 +1,4 @@
+
 # Cribbage V2
 ## Inactive MembersPlayers
 1. Change all references to players to show and allow lists to include all or just active players
