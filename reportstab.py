@@ -31,14 +31,16 @@ from tkinter import ttk
 from tkinter import messagebox as mbx
 from tkinter import filedialog as fdg
 
+from PyPDF2 import PdfMerger
 from sqlobject import *
 
 import sys as sys
 import os as os
 from datetime import date
 
-import alphareport
 # Personal imports
+import cribbageconfig as cfg
+import alphareport
 import PyPDF2 as pdf
 import cribbageconfig as cfg
 import cribbagereport as rpt
@@ -300,6 +302,7 @@ class ReportsTab (tk.Frame):
         # self.qtrFullVar.set(self.allReportsVar.get())
         self.skunksVar.set(self.allReportsVar.get())
         self.tourneyVar.set(self.allReportsVar.get())
+        self.mergedVar.set(self.allReportsVar.get())
 
     def runReports(self, tnumber, tdate):
         # Was unable to resolve rpt. variables in this method called from the tkinter event handler
@@ -353,12 +356,28 @@ class ReportsTab (tk.Frame):
                 # rpt = v[1]
                 # print('Run ', v[1])
         # check to see if mergedreports is requested
-        if mergedVar :
+        if self.mergedVar :
+            # get list of reports generated and folder and create merged report
             # merge all of the created reports
-            pass    # do nothing right now
-        # get list of reports generated and folder and create merged report
+            # after all reports have been run, show msgbox and clean up.
+            # pass    # do nothing right now
+            reportFileHeader = rpt.reportSeason + '-Week-' + str(rpt.tourneyRecord.TourneyNumber)
 
-        # after all reports have been run, show msgbox and clean up.
+            print(reportFileHeader)
+
+            reportList = [file for file in os.listdir(cfg.reportDirectory) if reportFileHeader in file ]
+
+            print(reportList)
+
+            print(os.getcwd)
+
+            merger = PdfMerger()
+            for file in reportList:
+                merger.append(file)
+
+            merger.write(reportFileHeader+' Merged-Reports.pdf')
+            merger.close()
+
         self.reportsFinished()
     def reportsFinished(self):
         self.showWidget(self.finishedPanel)
