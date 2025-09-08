@@ -397,6 +397,7 @@ class ReportsTab (tk.Frame):
         self.qtrFullVar.set(0)
         self.skunksVar.set(0)
         self.tourneyVar.set(0)
+        self.mergedVar.set(0)
 
     def hideWidget (self,w):
         w.grid_remove()

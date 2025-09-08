@@ -115,7 +115,9 @@ class CribbageStartup ():
         cfg.clubId = cfg.clubRecord.id
         cfg.clubName = cfg.clubRecord.clubName
         cfg.clubLocation = cfg.clubRecord.location
-        cfg.reportDirectory = cfg.clubRecord.reportDirectory
+        # this is now set from the reportDirectory = entry in cribbage.cfg
+        # cfg.reportDirectory = cfg.clubRecord.reportDirectory
+        print(cfg.reportDirectory)
 
         cfg.clubCount = cfg.ap.countPlayers(cfg.clubRecord)
         # PeggersStartup.createPlayersXref()

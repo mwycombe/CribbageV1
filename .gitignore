@@ -2,6 +2,7 @@
         Pipfile
         Pipfile.lock
         Seniors.cfg
+        cribbage.cfg
         __pycache__/
         db100.sqlite3
         importGR5Players
